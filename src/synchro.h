@@ -6,9 +6,7 @@
 
 extern bool fini;
 
-
 /* Les extern des variables pour la synchro ici */
-
 
 /* Fonctions de synchro à implanter */
 

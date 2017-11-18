@@ -3,16 +3,22 @@
 
 #include <ogg/ogg.h>
 #include <SDL2/SDL.h>
+#include <pthread.h>
 #include "ensivideo.h"
 
 #define NBTEX 30
 
-struct TextureDate {
-    unsigned char *plane[3]; // copy of plane are contiguous, thus
-			     // stride is width
-    double timems; // expiration date of the frame, in ms
-};
+/**
+ * All variables needed to protect data.
+ */
+extern pthread_mutex_t mutex_draw2SDL;
 
+
+struct TextureDate {
+	unsigned char *plane[3];	// copy of plane are contiguous, thus
+	// stride is width
+	double timems;		// expiration date of the frame, in ms
+};
 
 extern struct streamstate *theorastrstate;
 

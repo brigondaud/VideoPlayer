@@ -2,3 +2,6 @@ build
 
 #Pdf files
 *.pdf
+
+#Tests files
+tests/*

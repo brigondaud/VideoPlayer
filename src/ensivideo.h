@@ -8,6 +8,7 @@
 #include <vorbis/codec.h>
 #include "uthash.h"
 #include "ensitheora.h"
+#include "synchro.h"
 
 enum streamtype { TYPE_UNKNOW, TYPE_THEORA, TYPE_VORBIS };
 

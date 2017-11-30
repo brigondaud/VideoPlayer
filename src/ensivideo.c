@@ -60,11 +60,15 @@ void before_threads()
 {
 	pthread_mutex_init(&mutex_hashmap, NULL);
 	pthread_mutex_init(&mutex_draw2SDL, NULL);
+	pthread_mutex_init(&window_mutex, NULL);
+	pthread_cond_init(&window_cond, NULL);
 }
 
 
 void after_threads()
 {
+	pthread_cond_destroy(&window_cond);
+	pthread_mutex_destroy(&window_mutex);
 	pthread_mutex_destroy(&mutex_draw2SDL);
 	pthread_mutex_destroy(&mutex_hashmap);
 }

@@ -7,6 +7,8 @@
 extern bool fini;
 
 /* Les extern des variables pour la synchro ici */
+extern  pthread_mutex_t window_mutex;
+extern  pthread_cond_t window_cond;
 
 /* Fonctions de synchro à implanter */
 

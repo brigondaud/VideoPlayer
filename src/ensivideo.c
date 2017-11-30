@@ -64,11 +64,20 @@ void before_threads()
 	pthread_cond_init(&window_cond, NULL);
 	pthread_mutex_init(&texture_mutex, NULL);
 	pthread_cond_init(&texture_cond, NULL);
+	pthread_mutex_init(&prod_conso_mutex, NULL);
+	pthread_cond_init(&empty_cond, NULL);
+	pthread_cond_init(&full_cond, NULL);
+	window_fini = false;
+	texture_fini = false;
+	texture_count = 0;
 }
 
 
 void after_threads()
 {
+	pthread_cond_destroy(&full_cond);
+	pthread_cond_destroy(&empty_cond);
+	pthread_mutex_destroy(&prod_conso_mutex);
 	pthread_cond_destroy(&texture_cond);
 	pthread_mutex_destroy(&texture_mutex);
 	pthread_cond_destroy(&window_cond);

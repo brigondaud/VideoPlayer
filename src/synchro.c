@@ -11,6 +11,13 @@ pthread_cond_t window_cond;
 pthread_mutex_t texture_mutex;
 pthread_cond_t texture_cond;
 
+pthread_mutex_t prod_conso_mutex;
+pthread_cond_t empty_cond;
+pthread_cond_t full_cond;
+
+/* Variables pour le producteur consommateur */
+int texture_count;
+
 /* l'implantation des fonctions de synchro ici */
 void envoiTailleFenetre(th_ycbcr_buffer buffer)
 {
@@ -19,7 +26,7 @@ void envoiTailleFenetre(th_ycbcr_buffer buffer)
   windowsx = buffer->width;
   windowsy = buffer->height;
   window_fini = true;
-  
+
   pthread_cond_signal(&window_cond);
   pthread_mutex_unlock(&window_mutex);
 }
@@ -57,16 +64,28 @@ void attendreFenetreTexture()
 
 void debutConsommerTexture()
 {
+  pthread_mutex_lock(&prod_conso_mutex);
+  while(texture_count == 0)
+    pthread_cond_wait(&empty_cond, &prod_conso_mutex);
 }
 
 void finConsommerTexture()
 {
+  texture_count--;
+  pthread_cond_signal(&full_cond);
+  pthread_mutex_unlock(&prod_conso_mutex);
 }
 
 void debutDeposerTexture()
 {
+  pthread_mutex_lock(&prod_conso_mutex);
+  while(texture_count == NBTEX)
+    pthread_cond_wait(&full_cond, &prod_conso_mutex);
 }
 
 void finDeposerTexture()
 {
+  texture_count++;
+  pthread_cond_signal(&empty_cond);
+  pthread_mutex_unlock(&prod_conso_mutex);
 }

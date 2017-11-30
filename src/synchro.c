@@ -19,6 +19,7 @@ void envoiTailleFenetre(th_ycbcr_buffer buffer)
   windowsx = buffer->width;
   windowsy = buffer->height;
   window_fini = true;
+  
   pthread_cond_signal(&window_cond);
   pthread_mutex_unlock(&window_mutex);
 }
@@ -28,6 +29,7 @@ void attendreTailleFenetre()
   pthread_mutex_lock(&window_mutex);
   while(!window_fini)
     pthread_cond_wait(&window_cond, &window_mutex);
+
   window_fini = false;
   pthread_mutex_unlock(&window_mutex);
 }
@@ -47,7 +49,7 @@ void signalerFenetreEtTexturePrete()
 void attendreFenetreTexture()
 {
   pthread_mutex_lock(&texture_mutex);
-  while(texture_fini)
+  while(!texture_fini)
     pthread_cond_wait(&texture_cond, &texture_mutex);
   texture_fini = false;
   pthread_mutex_unlock(&texture_mutex);

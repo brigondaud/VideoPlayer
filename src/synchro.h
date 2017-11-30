@@ -10,6 +10,9 @@ extern bool fini;
 extern  pthread_mutex_t window_mutex;
 extern  pthread_cond_t window_cond;
 
+extern pthread_mutex_t texture_mutex;
+extern pthread_cond_t texture_cond;
+
 /* Fonctions de synchro à implanter */
 
 void envoiTailleFenetre(th_ycbcr_buffer buffer);

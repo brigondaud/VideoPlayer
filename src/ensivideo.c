@@ -60,13 +60,21 @@ void before_threads()
 {
 	pthread_mutex_init(&mutex_hashmap, NULL);
 	pthread_mutex_init(&mutex_draw2SDL, NULL);
+
+	// Size of the window
 	pthread_mutex_init(&window_mutex, NULL);
 	pthread_cond_init(&window_cond, NULL);
+
+	// Texture of the window
 	pthread_mutex_init(&texture_mutex, NULL);
 	pthread_cond_init(&texture_cond, NULL);
+
+	// Producer-consumer
 	pthread_mutex_init(&prod_conso_mutex, NULL);
 	pthread_cond_init(&empty_cond, NULL);
 	pthread_cond_init(&full_cond, NULL);
+
+	// Guarantee vars
 	window_fini = false;
 	texture_fini = false;
 	texture_count = 0;
@@ -75,13 +83,19 @@ void before_threads()
 
 void after_threads()
 {
+	// Producer-consumer
 	pthread_cond_destroy(&full_cond);
 	pthread_cond_destroy(&empty_cond);
 	pthread_mutex_destroy(&prod_conso_mutex);
+
+	// Texture of the window
 	pthread_cond_destroy(&texture_cond);
 	pthread_mutex_destroy(&texture_mutex);
+
+	// Size of the window
 	pthread_cond_destroy(&window_cond);
 	pthread_mutex_destroy(&window_mutex);
+
 	pthread_mutex_destroy(&mutex_draw2SDL);
 	pthread_mutex_destroy(&mutex_hashmap);
 }

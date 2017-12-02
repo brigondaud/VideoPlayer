@@ -20,7 +20,6 @@ extern pthread_cond_t empty_cond;
 extern pthread_cond_t full_cond;
 
 /* Fonctions de synchro à implanter */
-
 void envoiTailleFenetre(th_ycbcr_buffer buffer);
 void attendreTailleFenetre();
 

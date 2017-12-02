@@ -74,26 +74,25 @@ struct streamstate *getStreamState(ogg_sync_state * pstate, ogg_page * ppage,
 		assert(res == 0);
 
 		// proteger l'accès à la hashmap
-		pthread_mutex_lock(&mutex_hashmap);
 
-		if (type == TYPE_THEORA)
+		if (type == TYPE_THEORA) {
+			pthread_mutex_lock(&mutex_hashmap);
 			HASH_ADD_INT(theorastrstate, serial, s);
-		else
+			pthread_mutex_unlock(&mutex_hashmap);
+		} else
 			HASH_ADD_INT(vorbisstrstate, serial, s);
-
-		pthread_mutex_unlock(&mutex_hashmap);
 
 	} else {
 		// proteger l'accès à la hashmap
-		pthread_mutex_lock(&mutex_hashmap);
 
-		if (type == TYPE_THEORA)
+		if (type == TYPE_THEORA) {
+			pthread_mutex_lock(&mutex_hashmap);
 			HASH_FIND_INT(theorastrstate, &serial, s);
-		else
+			pthread_mutex_unlock(&mutex_hashmap);
+		} else
 			HASH_FIND_INT(vorbisstrstate, &serial, s);
 
 		assert(s != NULL);
-		pthread_mutex_unlock(&mutex_hashmap);
 	}
 	assert(s != NULL);
 
@@ -157,7 +156,11 @@ int decodeAllHeaders(int respac, struct streamstate *s, enum streamtype type)
 				 * MULTI-THREADING *
 				 *******************/
 
-				pthread_create(&theora2sdlthread, NULL, draw2SDL, (void *) &(s->serial));
+				if (0 != pthread_create(&theora2sdlthread, NULL, draw2SDL, (void *) (long long int) (s->serial))) {
+					perror("Impossible de créer le thread draw2SDL");
+					exit(EXIT_FAILURE);
+				}
+
 				assert(res == 0);
 			}
 		}

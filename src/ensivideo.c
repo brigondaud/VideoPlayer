@@ -35,10 +35,7 @@ int main(int argc, char *argv[])
 	pthread_create(&vorbis_pid, NULL, vorbisStreamReader, (void *)argv[1]);
 
 	// wait audio thread
-	if (!pthread_join(vorbis_pid, &status)) {
-		perror("Error while waiting Vorbis: ");
-		exit(EXIT_FAILURE);
-	}
+	pthread_join(vorbis_pid, &status);
 
 	// 1 seconde de garde pour le son,
 	sleep(1);

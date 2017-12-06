@@ -1,6 +1,7 @@
 #include "synchro.h"
 #include "ensitheora.h"
 
+/* Mettre à 1 pour une trace des synchronisations */
 #define DEBUG_THREADS 0
 
 /* les variables pour la synchro, ici */
@@ -105,12 +106,14 @@ void debutConsommerTexture()
 		pthread_cond_wait(&empty_cond, &prod_conso_mutex);
 	}
 
+	pthread_mutex_unlock(&prod_conso_mutex);	// UNLOCK
 	debugprintf(stderr, ">. Début consommer texture, on ENTRE.\n");
 }
 
 
 void finConsommerTexture()
 {
+	pthread_mutex_lock(&prod_conso_mutex);	// LOCK
 	debugprintf(stderr, "<. Fin consommer texture, on SORT.\n");
 
 	texture_count--;
@@ -133,12 +136,14 @@ void debutDeposerTexture()
 		pthread_cond_wait(&full_cond, &prod_conso_mutex);
 	}
 
+	pthread_mutex_unlock(&prod_conso_mutex);	// UNLOCK
 	debugprintf(stderr, ">. Début produire texture, on ENTRE.\n");
 }
 
 
 void finDeposerTexture()
 {
+	pthread_mutex_lock(&prod_conso_mutex);	// LOCK
 	debugprintf(stderr, "<. Fin déposer texture, on SORT.\n");
 
 	texture_count++;
